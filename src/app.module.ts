@@ -6,7 +6,7 @@ import typeorm from './config/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { UserRoleModule } from './user_role/user-role.module';
+import { UserRoleModule } from './user-role/user-role.module';
 
 @Module({
   imports: [
