@@ -1,20 +1,23 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 
-import { UserService } from './user.service';
-import { User } from './user.entity';
-import { CreateUser } from './dto/create-user.dto';
+import { UserService } from '@app/user/user.service';
+import { User } from '@app/user/user.entity';
+import { CreateUser } from '@app/user/dto/create-user.dto';
+import { Public } from '@app/auth/auth.metadata';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('')
-  async findUsers() {
-    return await this.userService.getUsers();
+  @Public()
+  @Post('/create')
+  async addUser(@Body() userDto: CreateUser): Promise<User> {
+    Logger.log('kungfu');
+    return await this.userService.create(userDto);
   }
 
-  @Post('')
-  async addUser(@Body() userDto: CreateUser): Promise<User> {
-    return await this.userService.createUser(userDto);
+  @Get('')
+  async findUsers() {
+    return await this.userService.find();
   }
 }

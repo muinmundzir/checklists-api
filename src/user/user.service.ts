@@ -18,7 +18,7 @@ export class UserService {
     private readonly userRoleService: UserRoleService,
   ) {}
 
-  async getUsers() {
+  async find() {
     try {
       const users = await this.userRepository.find({
         relations: ['userRole'],
@@ -49,7 +49,7 @@ export class UserService {
     }
   }
 
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string, priority: boolean = false) {
     try {
       const user = await this.userRepository.findOne({
         relations: ['userRole'],
@@ -58,9 +58,9 @@ export class UserService {
         },
       });
 
-      if (!user) throw new NotFoundException();
+      if (!user && !priority) throw new NotFoundException();
 
-      delete user.password;
+      if (!priority) delete user?.password;
 
       return user;
     } catch (error) {
@@ -68,11 +68,12 @@ export class UserService {
     }
   }
 
-  async createUser(userDto: CreateUser) {
+  async create(userDto: CreateUser) {
     try {
       const { name, email, password, isUser = true } = userDto;
+      const isPriority = true;
 
-      const existUser = await this.findUserByEmail(email);
+      const existUser = await this.findUserByEmail(email, isPriority);
 
       if (existUser)
         throw new ForbiddenException(
