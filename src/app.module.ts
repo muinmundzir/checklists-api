@@ -5,7 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import typeorm from './config/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
+import { UserRoleModule } from './user_role/user-role.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { UsersModule } from './users/users.module';
       useFactory: async (configService: ConfigService) =>
         await configService.get('typeorm'),
     }),
-    UsersModule,
+    UserModule,
+    UserRoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
