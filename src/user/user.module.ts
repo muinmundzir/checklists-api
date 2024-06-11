@@ -7,6 +7,7 @@ import { UserService } from '@app/user/user.service';
 import { User } from '@app/user/user.entity';
 import { UserRoleModule } from '@app/user-role/user-role.module';
 import { AuthGuard } from '@app/auth/auth.guard';
+import { RoleGuard } from '@app/auth/role.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), UserRoleModule],
@@ -14,6 +15,10 @@ import { AuthGuard } from '@app/auth/auth.guard';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
     },
     UserService,
   ],

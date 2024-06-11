@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 
-import { UserRole } from './user-role.entity';
+import { UserRole } from '@app/user-role/user-role.entity';
 
 @Injectable()
 export class UserRoleService {
