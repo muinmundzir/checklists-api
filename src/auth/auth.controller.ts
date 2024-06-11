@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 
 import { AuthService } from '@app/auth/auth.service';
-import { Public } from '@app/auth/auth.metadata';
+import { Public } from '@app/decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {

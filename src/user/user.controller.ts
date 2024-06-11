@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
-import { UserService } from '@app/user/user.service';
-import { User } from '@app/user/user.entity';
+import { Public } from '@app/decorators/auth.decorator';
+import { Roles } from '@app/decorators/role.decorator';
+import { Role } from '@app/types/role.enum';
 import { CreateUser } from '@app/user/dto/create-user.dto';
-import { Public } from '@app/auth/auth.metadata';
+import { User } from '@app/user/user.entity';
+import { UserService } from '@app/user/user.service';
 
 @Controller('users')
 export class UserController {
@@ -12,10 +14,10 @@ export class UserController {
   @Public()
   @Post('/create')
   async addUser(@Body() userDto: CreateUser): Promise<User> {
-    Logger.log('kungfu');
     return await this.userService.create(userDto);
   }
 
+  @Roles(Role.User)
   @Get('')
   async findUsers() {
     return await this.userService.find();
