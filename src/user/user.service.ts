@@ -1,6 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FileLogger, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { User } from '@app/user/user.entity';
 import { CreateUser } from '@app/user/dto/create-user.dto';
@@ -22,7 +26,7 @@ export class UserService {
 
       return users;
     } catch (error) {
-      Logger.log(error);
+      throw error;
     }
   }
 
@@ -35,17 +39,45 @@ export class UserService {
         },
       });
 
+      if (!user) throw new NotFoundException();
+
       delete user.password;
 
       return user;
     } catch (error) {
-      Logger.log(error);
+      throw error;
+    }
+  }
+
+  async findUserByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        relations: ['userRole'],
+        where: {
+          email,
+        },
+      });
+
+      if (!user) throw new NotFoundException();
+
+      delete user.password;
+
+      return user;
+    } catch (error) {
+      throw error;
     }
   }
 
   async createUser(userDto: CreateUser) {
     try {
       const { name, email, password, isUser = true } = userDto;
+
+      const existUser = await this.findUserByEmail(email);
+
+      if (existUser)
+        throw new ForbiddenException(
+          `User with email: ${email} already registered.`,
+        );
 
       let userRole: UserRole = null;
       if (isUser) {
@@ -64,7 +96,7 @@ export class UserService {
 
       return this.findUserById(id);
     } catch (error) {
-      Logger.log(error);
+      throw error;
     }
   }
 }

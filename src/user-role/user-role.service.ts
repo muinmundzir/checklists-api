@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 
@@ -17,7 +17,7 @@ export class UserRoleService {
 
       return roles;
     } catch (error) {
-      Logger.log(error);
+      throw error;
     }
   }
 
@@ -29,9 +29,11 @@ export class UserRoleService {
         },
       });
 
+      if (!role) throw new NotFoundException();
+
       return role;
     } catch (error) {
-      Logger.log(error);
+      throw error;
     }
   }
 }
