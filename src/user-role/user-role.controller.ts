@@ -7,7 +7,7 @@ export class UserRoleController {
   constructor(private readonly userRoleService: UserRoleService) {}
 
   @Get('/')
-  async findAllRoles() {
+  async findRoles() {
     return await this.userRoleService.getRoles();
   }
 }
