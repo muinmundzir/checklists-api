@@ -1,13 +1,16 @@
-import { UserRole } from '@app/user-role/user-role.entity';
+import * as argon from 'argon2';
 import {
   BeforeInsert,
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import * as argon from 'argon2';
+
+import { Trip } from '@app/trip/trip.entity';
+import { UserRole } from '@app/user-role/user-role.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -44,6 +47,9 @@ export class User {
   @OneToOne(() => UserRole)
   @JoinColumn({ name: 'user_role_id' })
   userRole: UserRole;
+
+  @OneToMany(() => Trip, (trip) => trip.user)
+  trips: Trip[];
 
   @BeforeInsert()
   async hashPassword() {
