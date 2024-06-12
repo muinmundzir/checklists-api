@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { TripService } from '@app/trip/trip.service';
 import { Roles } from '@app/decorators/role.decorator';
@@ -17,8 +17,18 @@ export class TripController {
     return await this.tripService.findAll(user.sub);
   }
 
+  @Get('/current')
+  async getCurrentTrip(@GetUser() user: UserCtx) {
+    return await this.tripService.findCurrent(user.sub);
+  }
+
   @Post('')
   async addTrip(@Body() tripDto: CreateTrip, @GetUser() user: UserCtx) {
-    return this.tripService.create(tripDto, user);
+    return await this.tripService.create(tripDto, user);
+  }
+
+  @Patch('/:id')
+  async cancelTrip(@Param() param: { id: string }, @GetUser() user: UserCtx) {
+    return await this.tripService.cancel(param.id, user);
   }
 }

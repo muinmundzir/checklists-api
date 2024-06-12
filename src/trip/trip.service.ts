@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 import { Trip } from '@app/trip/trip.entity';
 import { CreateTrip } from '@app/trip/dto/create-trip.dto';
@@ -30,15 +30,57 @@ export class TripService {
     }
   }
 
+  async cancel(tripId: string, ctx: UserCtx) {
+    try {
+      const { sub: id } = ctx;
+
+      const trip = await this.tripRepository.findOne({
+        where: {
+          userId: id,
+          id: tripId,
+        },
+      });
+
+      if (!trip) throw new NotFoundException('Trip not found.');
+
+      trip.status = TripStatus.Canceled;
+
+      return await this.tripRepository.save(trip);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findAll(userId: string) {
     try {
       const trips = await this.tripRepository.find({
         where: {
           userId,
         },
+        order: {
+          createdAt: 'DESC',
+        },
       });
 
       return trips;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findCurrent(userId: string) {
+    try {
+      const trip = await this.tripRepository.findOne({
+        where: {
+          userId,
+          status: Not(TripStatus.Canceled),
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+
+      return trip;
     } catch (error) {
       throw error;
     }
