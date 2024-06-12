@@ -11,6 +11,7 @@ import {
 
 import { Trip } from '@app/trip/trip.entity';
 import { UserRole } from '@app/user-role/user-role.entity';
+import { OrderTrip } from '@app/order-trip/order-trip.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -50,6 +51,9 @@ export class User {
 
   @OneToMany(() => Trip, (trip) => trip.user)
   trips: Trip[];
+
+  @OneToMany(() => OrderTrip, (orderTrip) => orderTrip.driver)
+  orderTrips: OrderTrip[];
 
   @BeforeInsert()
   async hashPassword() {

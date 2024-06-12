@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { User } from '@app/user/user.entity';
+import { OrderTrip } from '@app/order-trip/order-trip.entity';
 
 @Entity({ name: 'trips' })
 export class Trip {
@@ -47,4 +49,7 @@ export class Trip {
   @ManyToOne(() => User, (user) => user.trips)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => OrderTrip, (orderTrip) => orderTrip.trip)
+  orderTrip: OrderTrip;
 }
