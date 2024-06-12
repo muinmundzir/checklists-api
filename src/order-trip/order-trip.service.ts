@@ -55,27 +55,66 @@ export class OrderTripService {
     }
   }
 
-  async cancelTrip(tripId: string, ctx: UserCtx) {
+  async cancelTrip(orderTripId: string, ctx: UserCtx) {
     {
       try {
         const { sub: driverId } = ctx;
 
-        const trip = await this.tripRepository.findOneById(tripId);
+        const orderTrip = await this.orderTripRepository.findOne({
+          relations: ['trip'],
+          where: {
+            id: orderTripId,
+            driverId,
+          },
+        });
 
-        if (!trip) throw new NotFoundException('Trip not found.');
+        if (!orderTrip) throw new NotFoundException('Order not found.');
 
-        const orderTrip = new OrderTrip();
-        orderTrip.tripId = tripId;
-        orderTrip.driverId = driverId;
         orderTrip.status = TripStatus.Canceled;
 
-        const savedOrderTrip = await this.orderTripRepository.save(orderTrip);
+        // update trip status
+        orderTrip.trip.status = TripStatus.Canceled;
+
+        await this.orderTripRepository.save(orderTrip);
+        await this.tripRepository.save(orderTrip.trip);
+
+        // delete trip object
+        delete orderTrip.trip;
+
+        return orderTrip;
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
+
+  async completeTrip(orderTripId: string, ctx: UserCtx) {
+    {
+      try {
+        const { sub: driverId } = ctx;
+
+        const orderTrip = await this.orderTripRepository.findOne({
+          relations: ['trip'],
+          where: {
+            id: orderTripId,
+            driverId,
+          },
+        });
+
+        if (!orderTrip) throw new NotFoundException('Order not found.');
+
+        orderTrip.status = TripStatus.Completed;
 
         // update trip status
-        trip.status = TripStatus.Canceled;
-        await this.tripRepository.save(trip);
+        orderTrip.trip.status = TripStatus.Completed;
 
-        return savedOrderTrip;
+        await this.orderTripRepository.save(orderTrip);
+        await this.tripRepository.save(orderTrip.trip);
+
+        // delete trip object
+        delete orderTrip.trip;
+
+        return orderTrip;
       } catch (error) {
         throw error;
       }

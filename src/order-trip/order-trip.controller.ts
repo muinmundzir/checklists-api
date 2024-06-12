@@ -31,4 +31,12 @@ export class OrderTripController {
   ) {
     return await this.orderTripService.cancelTrip(param.id, user);
   }
+
+  @Post('/:id/completed')
+  async completeOrderTrip(
+    @Param() param: { id: string },
+    @GetUser() user: UserCtx,
+  ) {
+    return await this.orderTripService.completeTrip(param.id, user);
+  }
 }
