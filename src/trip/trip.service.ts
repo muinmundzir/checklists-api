@@ -73,7 +73,7 @@ export class TripService {
       const trip = await this.tripRepository.findOne({
         where: {
           userId,
-          status: Not(TripStatus.Canceled),
+          status: TripStatus.Pending || TripStatus.Accepted,
         },
         order: {
           createdAt: 'DESC',
