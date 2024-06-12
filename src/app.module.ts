@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { UserRoleModule } from './user-role/user-role.module';
 import { AuthModule } from './auth/auth.module';
 import { TripModule } from './trip/trip.module';
+import { OrderTripModule } from './order-trip/order-trip.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TripModule } from './trip/trip.module';
     UserRoleModule,
     AuthModule,
     TripModule,
+    OrderTripModule,
   ],
   controllers: [AppController],
   providers: [AppService],
