@@ -54,4 +54,31 @@ export class OrderTripService {
       throw error;
     }
   }
+
+  async cancelTrip(tripId: string, ctx: UserCtx) {
+    {
+      try {
+        const { sub: driverId } = ctx;
+
+        const trip = await this.tripRepository.findOneById(tripId);
+
+        if (!trip) throw new NotFoundException('Trip not found.');
+
+        const orderTrip = new OrderTrip();
+        orderTrip.tripId = tripId;
+        orderTrip.driverId = driverId;
+        orderTrip.status = TripStatus.Canceled;
+
+        const savedOrderTrip = await this.orderTripRepository.save(orderTrip);
+
+        // update trip status
+        trip.status = TripStatus.Canceled;
+        await this.tripRepository.save(trip);
+
+        return savedOrderTrip;
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
 }

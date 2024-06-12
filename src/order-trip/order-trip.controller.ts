@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { OrderTripService } from '@app/order-trip/order-trip.service';
 import { Role } from '@app/types/role.enum';
@@ -22,5 +22,13 @@ export class OrderTripController {
     @GetUser() user: UserCtx,
   ) {
     return await this.orderTripService.confirmTrip(param.id, user);
+  }
+
+  @Patch('/:id')
+  async cancelOrderTrip(
+    @Param() param: { id: string },
+    @GetUser() user: UserCtx,
+  ) {
+    return await this.orderTripService.cancelTrip(param.id, user);
   }
 }
