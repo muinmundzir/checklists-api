@@ -1,4 +1,3 @@
-// response.interceptor.ts
 import {
   CallHandler,
   ExecutionContext,
