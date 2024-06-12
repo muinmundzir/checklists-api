@@ -22,6 +22,7 @@ export class UserService {
     try {
       const users = await this.userRepository.find({
         relations: ['userRole'],
+        select: ['id', 'name', 'email', 'createdAt', 'userRole'],
       });
 
       return users;
@@ -34,14 +35,13 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({
         relations: ['userRole'],
+        select: ['id', 'name', 'email', 'createdAt', 'userRole'],
         where: {
           id,
         },
       });
 
       if (!user) throw new NotFoundException();
-
-      delete user.password;
 
       return user;
     } catch (error) {

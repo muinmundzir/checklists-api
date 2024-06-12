@@ -5,7 +5,14 @@ import { Role } from '@app/types/role.enum';
 import { Roles } from '@app/decorators/role.decorator';
 import { GetUser } from '@app/decorators/get-user.decorator';
 import { UserCtx } from '@app/types/user-ctx.type';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Order Trip')
 @Roles(Role.Driver)
 @Controller('order-trips')
 export class OrderTripController {
@@ -17,6 +24,14 @@ export class OrderTripController {
   }
 
   @Post('/:id')
+  @ApiParam({
+    name: 'id',
+    description: 'Trip id',
+    required: true,
+  })
+  @ApiCreatedResponse({
+    description: 'Return created order trip with its related trip',
+  })
   async confirmOrderTrip(
     @Param() param: { id: string },
     @GetUser() user: UserCtx,
@@ -25,6 +40,14 @@ export class OrderTripController {
   }
 
   @Patch('/:id')
+  @ApiParam({
+    name: 'id',
+    description: 'Order trip id',
+    required: true,
+  })
+  @ApiOkResponse({
+    description: 'Return cancelled order trip',
+  })
   async cancelOrderTrip(
     @Param() param: { id: string },
     @GetUser() user: UserCtx,
@@ -33,6 +56,14 @@ export class OrderTripController {
   }
 
   @Post('/:id/completed')
+  @ApiParam({
+    name: 'id',
+    description: 'Order trip id',
+    required: true,
+  })
+  @ApiCreatedResponse({
+    description: 'Return completed order trip with its related trip',
+  })
   async completeOrderTrip(
     @Param() param: { id: string },
     @GetUser() user: UserCtx,

@@ -3,8 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import typeorm from '@app/config/typeorm';
-import { AppController } from '@app/app.controller';
-import { AppService } from '@app/app.service';
 import { UserModule } from '@app/user/user.module';
 import { UserRoleModule } from '@app/user-role/user-role.module';
 import { AuthModule } from '@app/auth/auth.module';
@@ -28,7 +26,5 @@ import { OrderTripModule } from '@app/order-trip/order-trip.module';
     TripModule,
     OrderTripModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
