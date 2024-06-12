@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Trip } from '@app/trip/trip.entity';
 import { CreateTrip } from '@app/trip/dto/create-trip.dto';

@@ -1,5 +1,5 @@
 import {
-  ForbiddenException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -76,7 +76,7 @@ export class UserService {
       const existUser = await this.findUserByEmail(email, isPriority);
 
       if (existUser)
-        throw new ForbiddenException(
+        throw new ConflictException(
           `User with email: ${email} already registered.`,
         );
 

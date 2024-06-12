@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import {
+  ApiBadGatewayResponse,
   ApiBody,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -24,6 +26,7 @@ export class TripController {
   @ApiOkResponse({
     description: 'Return list of signed in user trip history',
   })
+  @ApiBadGatewayResponse({ description: 'Server error' })
   async getTrips(@GetUser() user: UserCtx) {
     return await this.tripService.findAll(user.sub);
   }
@@ -39,6 +42,9 @@ export class TripController {
   @Post('')
   @ApiCreatedResponse({
     description: 'Return succesfully created trip',
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip not found',
   })
   @ApiBody({
     type: CreateTrip,
@@ -56,6 +62,9 @@ export class TripController {
   })
   @ApiOkResponse({
     description: 'Return cancelled trip',
+  })
+  @ApiNotFoundResponse({
+    description: 'Trip not found',
   })
   async cancelTrip(@Param() param: { id: string }, @GetUser() user: UserCtx) {
     return await this.tripService.cancel(param.id, user);

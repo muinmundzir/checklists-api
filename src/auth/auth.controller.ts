@@ -1,5 +1,10 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { AuthService } from '@app/auth/auth.service';
 import { SignIn } from '@app/auth/dto/sign-in.dto';
@@ -15,6 +20,9 @@ export class AuthController {
   @Post('login')
   @ApiOkResponse({
     description: 'Return jwt after succesfully sign in',
+  })
+  @ApiNotFoundResponse({
+    description: 'Account not found',
   })
   @ApiBody({
     type: SignIn,

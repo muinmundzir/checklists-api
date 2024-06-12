@@ -1,4 +1,11 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { Public } from '@app/decorators/auth.decorator';
 import { Roles } from '@app/decorators/role.decorator';
@@ -6,12 +13,6 @@ import { Role } from '@app/types/role.enum';
 import { CreateUser } from '@app/user/dto/create-user.dto';
 import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
-import {
-  ApiBody,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('users')
@@ -22,6 +23,9 @@ export class UserController {
   @Post('/')
   @ApiCreatedResponse({
     description: 'Return succesfully created user',
+  })
+  @ApiConflictResponse({
+    description: 'Error duplicate email registered',
   })
   @ApiBody({
     type: CreateUser,
