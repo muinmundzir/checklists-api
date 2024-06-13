@@ -5,12 +5,14 @@ import { AppModule } from '@app/app.module';
 import { swaggerConfig } from '@app/config/swagger.config';
 import { ResponseInterceptor } from '@app/interceptors/response.interceptor';
 import { HttpExceptionFilter } from '@app/filters/http-exception.filter';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe());
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);
