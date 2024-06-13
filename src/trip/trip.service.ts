@@ -1,16 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Trip } from '@app/trip/trip.entity';
 import { CreateTrip } from '@app/trip/dto/create-trip.dto';
 import { UserCtx } from '@app/types/user-ctx.type';
 import { TripStatus } from '@app/types/status.enum';
+import { OrderTrip } from '@app/order-trip/order-trip.entity';
 
 @Injectable()
 export class TripService {
   constructor(
     @InjectRepository(Trip) private readonly tripRepository: Repository<Trip>,
+    @InjectRepository(OrderTrip)
+    private readonly orderTripRepository: Repository<OrderTrip>,
   ) {}
 
   async create(tripDto: CreateTrip, ctx: UserCtx) {
@@ -45,6 +48,18 @@ export class TripService {
 
       trip.status = TripStatus.Canceled;
 
+      const existOrderTrip = await this.orderTripRepository.findOne({
+        where: {
+          tripId,
+        },
+      });
+
+      if (existOrderTrip) {
+        existOrderTrip.status = TripStatus.Canceled;
+
+        await this.orderTripRepository.save(existOrderTrip);
+      }
+
       return await this.tripRepository.save(trip);
     } catch (error) {
       throw error;
@@ -73,7 +88,7 @@ export class TripService {
       const trip = await this.tripRepository.findOne({
         where: {
           userId,
-          status: TripStatus.Pending || TripStatus.Accepted,
+          status: In([TripStatus.Pending, TripStatus.Accepted]),
         },
         order: {
           createdAt: 'DESC',
