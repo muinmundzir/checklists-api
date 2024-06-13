@@ -11,6 +11,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { TripParam } from './dto/trip.param';
 
 @ApiTags('Order Trip')
 @Roles(Role.Driver)
@@ -51,10 +52,7 @@ export class OrderTripController {
   @ApiCreatedResponse({
     description: 'Return created order trip with its related trip',
   })
-  async confirmOrderTrip(
-    @Param() param: { id: string },
-    @GetUser() user: UserCtx,
-  ) {
+  async confirmOrderTrip(@Param() param: TripParam, @GetUser() user: UserCtx) {
     return await this.orderTripService.confirmTrip(param.id, user);
   }
 
@@ -67,10 +65,7 @@ export class OrderTripController {
   @ApiOkResponse({
     description: 'Return cancelled order trip',
   })
-  async cancelOrderTrip(
-    @Param() param: { id: string },
-    @GetUser() user: UserCtx,
-  ) {
+  async cancelOrderTrip(@Param() param: TripParam, @GetUser() user: UserCtx) {
     return await this.orderTripService.cancelTrip(param.id, user);
   }
 
@@ -83,10 +78,7 @@ export class OrderTripController {
   @ApiCreatedResponse({
     description: 'Return completed order trip with its related trip',
   })
-  async completeOrderTrip(
-    @Param() param: { id: string },
-    @GetUser() user: UserCtx,
-  ) {
+  async completeOrderTrip(@Param() param: TripParam, @GetUser() user: UserCtx) {
     return await this.orderTripService.completeTrip(param.id, user);
   }
 }

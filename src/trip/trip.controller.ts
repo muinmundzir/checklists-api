@@ -15,6 +15,7 @@ import { Role } from '@app/types/role.enum';
 import { GetUser } from '@app/decorators/get-user.decorator';
 import { UserCtx } from '@app/types/user-ctx.type';
 import { CreateTrip } from '@app/trip/dto/create-trip.dto';
+import { UserParam } from '@app/trip/dto/user.param';
 
 @ApiTags('Trip')
 @Roles(Role.User)
@@ -66,7 +67,7 @@ export class TripController {
   @ApiNotFoundResponse({
     description: 'Trip not found',
   })
-  async cancelTrip(@Param() param: { id: string }, @GetUser() user: UserCtx) {
+  async cancelTrip(@Param() param: UserParam, @GetUser() user: UserCtx) {
     return await this.tripService.cancel(param.id, user);
   }
 }
