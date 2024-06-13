@@ -23,6 +23,11 @@ export class OrderTripController {
     return await this.orderTripService.getTrips();
   }
 
+  @Get('/current')
+  async getCurrent(@GetUser() driver: UserCtx) {
+    return await this.orderTripService.getCurrentOrderTrip(driver.sub);
+  }
+
   @Post('/:id')
   @ApiParam({
     name: 'id',

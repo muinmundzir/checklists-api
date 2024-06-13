@@ -120,4 +120,39 @@ export class OrderTripService {
       }
     }
   }
+
+  async getCurrentOrderTrip(driverId: string) {
+    try {
+      const orderTrip = await this.orderTripRepository
+        .createQueryBuilder('orderTrip')
+        .leftJoinAndSelect('orderTrip.trip', 'trip')
+        .leftJoinAndSelect('orderTrip.driver', 'driver')
+        .leftJoinAndSelect('trip.user', 'user')
+        .select([
+          'orderTrip.id',
+          'orderTrip.status',
+          'trip.id',
+          'trip.startLocation',
+          'trip.endLocation',
+          'trip.status',
+          'trip.createdAt',
+          'driver.id',
+          'driver.name',
+          'user.id',
+          'user.name',
+        ])
+        .where('orderTrip.driverId = :driverId', { driverId })
+        .andWhere('orderTrip.status = :status', { status: TripStatus.Accepted })
+        .getOne();
+
+      if (!orderTrip)
+        throw new NotFoundException(
+          'Order trip not found, either it has been completed or it has been canceled',
+        );
+
+      return orderTrip;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
