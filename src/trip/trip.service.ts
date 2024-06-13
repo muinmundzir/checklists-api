@@ -47,6 +47,7 @@ export class TripService {
       if (!trip) throw new NotFoundException('Trip not found.');
 
       trip.status = TripStatus.Canceled;
+      trip.updatedAt = new Date();
 
       const existOrderTrip = await this.orderTripRepository.findOne({
         where: {
@@ -56,6 +57,7 @@ export class TripService {
 
       if (existOrderTrip) {
         existOrderTrip.status = TripStatus.Canceled;
+        existOrderTrip.updatedAt = new Date();
 
         await this.orderTripRepository.save(existOrderTrip);
       }
