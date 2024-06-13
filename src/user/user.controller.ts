@@ -11,7 +11,6 @@ import { Public } from '@app/decorators/auth.decorator';
 import { Roles } from '@app/decorators/role.decorator';
 import { Role } from '@app/types/role.enum';
 import { CreateUser } from '@app/user/dto/create-user.dto';
-import { User } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
 
 @ApiTags('User')
@@ -31,7 +30,7 @@ export class UserController {
     type: CreateUser,
     description: 'JSON structure for user object',
   })
-  async addUser(@Body() userDto: CreateUser): Promise<User> {
+  async addUser(@Body() userDto: CreateUser) {
     return await this.userService.create(userDto);
   }
 

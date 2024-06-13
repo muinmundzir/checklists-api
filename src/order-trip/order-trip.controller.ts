@@ -19,16 +19,25 @@ export class OrderTripController {
   constructor(private readonly orderTripService: OrderTripService) {}
 
   @Get('')
+  @ApiOkResponse({
+    description: 'Return all available users created trips',
+  })
   async getAvailableTrips() {
     return await this.orderTripService.getTrips();
   }
 
   @Get('/history')
+  @ApiOkResponse({
+    description: "Return history of driver's order trips",
+  })
   async getOrderHistory(@GetUser() driver: UserCtx) {
     return await this.orderTripService.getOrderTripsHistory(driver.sub);
   }
 
   @Get('/current')
+  @ApiOkResponse({
+    description: 'Return current ongoing order trips',
+  })
   async getCurrent(@GetUser() driver: UserCtx) {
     return await this.orderTripService.getCurrentOrderTrip(driver.sub);
   }

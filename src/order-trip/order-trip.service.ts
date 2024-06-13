@@ -27,7 +27,7 @@ export class OrderTripService {
         },
       });
 
-      return trips;
+      return { data: trips };
     } catch (error) {
       throw error;
     }
@@ -55,7 +55,7 @@ export class OrderTripService {
         .orderBy('orderTrip.updatedAt', 'DESC')
         .getMany();
 
-      return orderTrip;
+      return { data: orderTrip };
     } catch (error) {
       throw error;
     }
@@ -81,7 +81,7 @@ export class OrderTripService {
       trip.status = TripStatus.Accepted;
       await this.tripRepository.save(trip);
 
-      return savedOrderTrip;
+      return { data: savedOrderTrip };
     } catch (error) {
       throw error;
     }
@@ -115,7 +115,7 @@ export class OrderTripService {
         // delete trip object
         delete orderTrip.trip;
 
-        return orderTrip;
+        return { data: orderTrip };
       } catch (error) {
         throw error;
       }
@@ -150,7 +150,9 @@ export class OrderTripService {
         // delete trip object
         delete orderTrip.trip;
 
-        return orderTrip;
+        return {
+          data: orderTrip,
+        };
       } catch (error) {
         throw error;
       }
@@ -186,7 +188,7 @@ export class OrderTripService {
           'Order trip not found, either it has been completed or it has been canceled',
         );
 
-      return orderTrip;
+      return { data: orderTrip };
     } catch (error) {
       throw error;
     }

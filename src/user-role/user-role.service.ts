@@ -15,7 +15,7 @@ export class UserRoleService {
     try {
       const roles = await this.userRoleRepository.find();
 
-      return roles;
+      return { data: roles };
     } catch (error) {
       throw error;
     }

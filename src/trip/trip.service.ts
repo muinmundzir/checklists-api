@@ -27,7 +27,7 @@ export class TripService {
       trip.userId = id;
       trip.status = TripStatus.Pending;
 
-      return await this.tripRepository.save(trip);
+      return { data: await this.tripRepository.save(trip) };
     } catch (error) {
       throw error;
     }
@@ -62,7 +62,9 @@ export class TripService {
         await this.orderTripRepository.save(existOrderTrip);
       }
 
-      return await this.tripRepository.save(trip);
+      return {
+        data: await this.tripRepository.save(trip),
+      };
     } catch (error) {
       throw error;
     }
@@ -79,7 +81,7 @@ export class TripService {
         },
       });
 
-      return trips;
+      return { data: trips };
     } catch (error) {
       throw error;
     }
@@ -97,7 +99,7 @@ export class TripService {
         },
       });
 
-      return trip;
+      return { data: trip };
     } catch (error) {
       throw error;
     }

@@ -25,7 +25,9 @@ export class UserService {
         select: ['id', 'name', 'email', 'createdAt', 'userRole'],
       });
 
-      return users;
+      return {
+        data: users,
+      };
     } catch (error) {
       throw error;
     }
@@ -43,7 +45,9 @@ export class UserService {
 
       if (!user) throw new NotFoundException();
 
-      return user;
+      return {
+        data: user,
+      };
     } catch (error) {
       throw error;
     }
@@ -95,7 +99,9 @@ export class UserService {
 
       const { id } = await this.userRepository.save(user);
 
-      return this.findUserById(id);
+      return {
+        data: this.findUserById(id),
+      };
     } catch (error) {
       throw error;
     }

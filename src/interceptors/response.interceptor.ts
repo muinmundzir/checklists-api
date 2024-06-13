@@ -19,9 +19,9 @@ export class ResponseInterceptor<T>
   ): Observable<ApiResponse<T>> {
     return next.handle().pipe(
       map((data) => ({
-        data,
+        data: data?.data,
         error: null,
-        meta: {},
+        meta: data?.meta,
       })),
     );
   }
