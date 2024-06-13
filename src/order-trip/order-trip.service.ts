@@ -22,9 +22,40 @@ export class OrderTripService {
         where: {
           status: TripStatus.Pending,
         },
+        order: {
+          createdAt: 'ASC',
+        },
       });
 
       return trips;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getOrderTripsHistory(driverId: string) {
+    try {
+      const orderTrip = await this.orderTripRepository
+        .createQueryBuilder('orderTrip')
+        .leftJoinAndSelect('orderTrip.trip', 'trip')
+        .leftJoinAndSelect('trip.user', 'user')
+        .leftJoinAndSelect('orderTrip.driver', 'driver')
+        .select([
+          'orderTrip.id',
+          'orderTrip.updatedAt',
+          'trip.id',
+          'trip.startLocation',
+          'trip.endLocation',
+          'user.id',
+          'user.name',
+          'driver.id',
+          'driver.name',
+        ])
+        .where('orderTrip.driver = :driverId', { driverId })
+        .orderBy('orderTrip.updatedAt', 'DESC')
+        .getMany();
+
+      return orderTrip;
     } catch (error) {
       throw error;
     }
@@ -42,6 +73,7 @@ export class OrderTripService {
       orderTrip.tripId = tripId;
       orderTrip.driverId = driverId;
       orderTrip.status = TripStatus.Accepted;
+      orderTrip.updatedAt = new Date();
 
       const savedOrderTrip = await this.orderTripRepository.save(orderTrip);
 
@@ -71,9 +103,11 @@ export class OrderTripService {
         if (!orderTrip) throw new NotFoundException('Order not found.');
 
         orderTrip.status = TripStatus.Canceled;
+        orderTrip.updatedAt = new Date();
 
         // update trip status
         orderTrip.trip.status = TripStatus.Canceled;
+        orderTrip.trip.updatedAt = new Date();
 
         await this.orderTripRepository.save(orderTrip);
         await this.tripRepository.save(orderTrip.trip);
@@ -104,9 +138,11 @@ export class OrderTripService {
         if (!orderTrip) throw new NotFoundException('Order not found.');
 
         orderTrip.status = TripStatus.Completed;
+        orderTrip.updatedAt = new Date();
 
         // update trip status
         orderTrip.trip.status = TripStatus.Completed;
+        orderTrip.trip.updatedAt = new Date();
 
         await this.orderTripRepository.save(orderTrip);
         await this.tripRepository.save(orderTrip.trip);
