@@ -74,7 +74,7 @@ export class UserService {
 
   async create(userDto: CreateUser) {
     try {
-      const { name, email, password, isUser = true } = userDto;
+      const { name, email, password } = userDto;
       const isPriority = true;
 
       const existUser = await this.findUserByEmail(email, isPriority);
@@ -85,11 +85,7 @@ export class UserService {
         );
 
       let userRole: UserRole = null;
-      if (isUser) {
-        userRole = await this.userRoleService.findRoleByName('user');
-      } else {
-        userRole = await this.userRoleService.findRoleByName('driver');
-      }
+      userRole = await this.userRoleService.findRoleByName('user');
 
       const user = new User();
       user.name = name;

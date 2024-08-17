@@ -9,9 +9,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Trip } from '@app/trip/trip.entity';
 import { UserRole } from '@app/user-role/user-role.entity';
-import { OrderTrip } from '@app/order-trip/order-trip.entity';
+import { Checklist } from '@app/checklist/checklist.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -49,11 +48,8 @@ export class User {
   @JoinColumn({ name: 'user_role_id' })
   userRole: UserRole;
 
-  @OneToMany(() => Trip, (trip) => trip.user)
-  trips: Trip[];
-
-  @OneToMany(() => OrderTrip, (orderTrip) => orderTrip.driver)
-  orderTrips: OrderTrip[];
+  @OneToMany(() => Checklist, (checklist) => checklist.user)
+  checklists: Checklist[];
 
   @BeforeInsert()
   async hashPassword() {
