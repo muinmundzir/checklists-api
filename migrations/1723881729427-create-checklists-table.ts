@@ -30,11 +30,6 @@ export class CreateChecklistsTable1723881729427 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'description',
-            type: 'varchar',
-            isNullable: false,
-          },
-          {
             name: 'user_id',
             type: 'uuid',
             isNullable: true,

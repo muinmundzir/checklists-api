@@ -36,11 +36,6 @@ export class CreateChecklistItemsTable1723882166789
             isNullable: false,
           },
           {
-            name: 'user_id',
-            type: 'uuid',
-            isNullable: false,
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
