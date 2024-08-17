@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ChecklistService } from './checklist.service';
 import {
   ApiCreatedResponse,
@@ -24,6 +32,22 @@ export class ChecklistController {
   })
   async find(@GetUser() user: UserCtx) {
     return await this.checklistService.find(user.sub);
+  }
+
+  @Get('/:checklistId')
+  @ApiCreatedResponse({
+    description: 'Return list checklists',
+  })
+  @ApiParam({
+    name: 'checklistId',
+    required: true,
+    description: "Checklist's id",
+  })
+  async findOne(
+    @Param() params: { checklistId: string },
+    @GetUser() user: UserCtx,
+  ) {
+    return await this.checklistService.findDetail(params.checklistId, user.sub);
   }
 
   @Post('/create')
@@ -55,5 +79,30 @@ export class ChecklistController {
     @GetUser() user: UserCtx,
   ) {
     return await this.checklistService.delete(params.checklistId, user.sub);
+  }
+
+  @Patch('/:checklistId')
+  @ApiCreatedResponse({
+    description: 'Return succesfully updated checklist',
+  })
+  @ApiParam({
+    name: 'checklistId',
+    required: true,
+    description: "Checklist's id",
+  })
+  @ApiBody({
+    type: CreateChecklist,
+    description: 'JSON structure for checklist object',
+  })
+  async update(
+    @Param() params: { checklistId: string },
+    @Body() checklistDto: CreateChecklist,
+    @GetUser() user: UserCtx,
+  ) {
+    return await this.checklistService.updateChecklist(
+      checklistDto,
+      params.checklistId,
+      user.sub,
+    );
   }
 }

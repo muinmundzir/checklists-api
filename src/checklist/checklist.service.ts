@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
@@ -19,6 +19,24 @@ export class ChecklistService {
       const checklists = await this.checklistRepository.find({
         relations: ['items'],
         where: {
+          userId,
+        },
+      })
+
+      return {
+        data: checklists,
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async findDetail(checklistId: string, userId: string) {
+    try {
+      const checklists = await this.checklistRepository.findOne({
+        relations: ['items'],
+        where: {
+          id: checklistId,
           userId,
         },
       })
@@ -55,7 +73,44 @@ export class ChecklistService {
         data,
       }
     } catch (error) {
-      throw error
+      throw error;
+    }
+  }
+
+  async updateChecklist(
+    checklistDto: CreateChecklist,
+    checklistId: string,
+    userId: string,
+  ) {
+    try {
+      const { title, headerUrl, items } = checklistDto;
+
+      const checklist = await this.checklistRepository.findOne({
+        where: {
+          id: checklistId,
+          userId,
+        },
+      });
+
+      checklist.title = title;
+      checklist.headerUrl = headerUrl;
+
+      await this.checklistRepository.update(checklistId, checklist);
+
+      await this.itemsService.create(items, checklistId);
+
+      const data = await this.checklistRepository.findOne({
+        relations: ['items'],
+        where: {
+          id: checklistId,
+        },
+      });
+
+      return {
+        data,
+      };
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -66,15 +121,15 @@ export class ChecklistService {
           id: checklistId,
           userId,
         },
-      })
+      });
 
-      await this.checklistRepository.remove(checklist)
+      await this.checklistRepository.remove(checklist);
 
       return {
         data: 'Checklist has been deleted',
-      }
+      };
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

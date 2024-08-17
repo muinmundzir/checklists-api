@@ -56,20 +56,20 @@ export class ChecklistItemService {
       const checklist = await this.itemRepository.findOne({
         relations: ['checklist', 'checklist.user'],
         where: {
-          id:itemId,
+          id: itemId,
           checklist: {
-            userId
-          }
+            userId,
+          },
         },
-      })
+      });
 
-      await this.itemRepository.remove(checklist)
+      await this.itemRepository.remove(checklist);
 
       return {
         data: 'Checklist item has been deleted',
-      }
+      };
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }
