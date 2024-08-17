@@ -6,8 +6,8 @@ import typeorm from '@app/config/typeorm';
 import { UserModule } from '@app/user/user.module';
 import { UserRoleModule } from '@app/user-role/user-role.module';
 import { AuthModule } from '@app/auth/auth.module';
-import { TripModule } from '@app/trip/trip.module';
-import { OrderTripModule } from '@app/order-trip/order-trip.module';
+import { ChecklistModule } from '@app/checklist/checklist.module';
+import { ChecklistItemModule } from '@app/checklist-item/checklist-item.module';
 
 @Module({
   imports: [
@@ -23,8 +23,8 @@ import { OrderTripModule } from '@app/order-trip/order-trip.module';
     UserModule,
     UserRoleModule,
     AuthModule,
-    TripModule,
-    OrderTripModule,
+    ChecklistModule,
+    ChecklistItemModule,
   ],
 })
 export class AppModule {}
