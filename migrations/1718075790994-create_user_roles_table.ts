@@ -36,7 +36,6 @@ export class CreateUserRolesTable1718075790994 implements MigrationInterface {
     );
 
     await queryRunner.query(`INSERT INTO user_roles (name) VALUES ('user')`);
-    await queryRunner.query(`INSERT INTO user_roles (name) VALUES ('driver')`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
