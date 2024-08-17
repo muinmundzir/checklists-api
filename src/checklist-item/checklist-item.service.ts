@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -24,6 +24,28 @@ export class ChecklistItemService {
       });
 
       return await this.itemRepository.save(items);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async toggleComplete(itemId: string) {
+    try {
+      const item = await this.itemRepository.findOne({
+        where: {
+          id: itemId,
+        },
+      });
+
+      if (!item) throw new NotFoundException('Item not found');
+
+      item.isCompleted = !item.isCompleted;
+
+      const savedItem = await this.itemRepository.save(item);
+
+      return {
+        data: savedItem,
+      };
     } catch (error) {
       throw error;
     }
