@@ -58,7 +58,7 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Running the app
+## Endpoint Documentation
 Documentation can be viewed after running the app in: {appUrl}/api-docs
 
 ## Support
