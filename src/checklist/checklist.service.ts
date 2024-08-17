@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
@@ -53,6 +53,25 @@ export class ChecklistService {
 
       return {
         data,
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async delete(checklistId: string, userId: string) {
+    try {
+      const checklist = await this.checklistRepository.findOne({
+        where: {
+          id: checklistId,
+          userId,
+        },
+      })
+
+      await this.checklistRepository.remove(checklist)
+
+      return {
+        data: 'Checklist has been deleted',
       }
     } catch (error) {
       throw error

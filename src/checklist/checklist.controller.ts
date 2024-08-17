@@ -1,11 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common'
-import { ChecklistService } from './checklist.service'
-import { ApiCreatedResponse, ApiBody, ApiTags } from '@nestjs/swagger'
-import { CreateChecklist } from './dto/create-checklist.dto'
-import { GetUser } from '@app/decorators/get-user.decorator'
-import { UserCtx } from '@app/types/user-ctx.type'
-import { Roles } from '@app/decorators/role.decorator'
-import { Role } from '@app/types/role.enum'
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { ChecklistService } from './checklist.service';
+import {
+  ApiCreatedResponse,
+  ApiBody,
+  ApiTags,
+  ApiParam,
+} from '@nestjs/swagger';
+import { CreateChecklist } from './dto/create-checklist.dto';
+import { GetUser } from '@app/decorators/get-user.decorator';
+import { UserCtx } from '@app/types/user-ctx.type';
+import { Roles } from '@app/decorators/role.decorator';
+import { Role } from '@app/types/role.enum';
 
 @Roles(Role.User)
 @ApiTags('Checklists')
@@ -13,7 +18,7 @@ import { Role } from '@app/types/role.enum'
 export class ChecklistController {
   constructor(private readonly checklistService: ChecklistService) {}
 
-  @Post('/')
+  @Get('/')
   @ApiCreatedResponse({
     description: 'Return list checklists',
   })
@@ -34,5 +39,21 @@ export class ChecklistController {
     @GetUser() user: UserCtx,
   ) {
     return await this.checklistService.create(checklistDto, user.sub);
+  }
+
+  @Delete('/:checklistId')
+  @ApiCreatedResponse({
+    description: 'Return succesfully deleted checklist',
+  })
+  @ApiParam({
+    name: 'checklistId',
+    required: true,
+    description: "Checklist's id",
+  })
+  async delete(
+    @Param() params: { checklistId: string },
+    @GetUser() user: UserCtx,
+  ) {
+    return await this.checklistService.delete(params.checklistId, user.sub);
   }
 }
