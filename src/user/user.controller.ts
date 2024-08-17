@@ -34,7 +34,7 @@ export class UserController {
     return await this.userService.create(userDto);
   }
 
-  @Roles(Role.User, Role.Driver)
+  @Roles(Role.User)
   @Get('')
   @ApiOkResponse({
     description: 'Return list of users',

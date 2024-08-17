@@ -20,9 +20,6 @@ export class Checklist {
   @Column({ name: 'header_url' })
   headerUrl: string;
 
-  @Column()
-  description: string;
-
   @Column({ name: 'user_id' })
   userId: string;
 
